@@ -16,26 +16,29 @@
                 <th style="width: 1px;"></th>
             </tr>
         </thead>
+         
         <tbody>
-            @foreach (var item in users)
+            @if (showFilteredUsers)
+            {
+                @foreach (var u in users.Where(u => activeFilter == u.IsActive))
                 {
-                <tr>
-                    <td>
-                        @item.Id
-                    </td>
-                    <td>
-                        @item.Forename
-                    </td>
-                    <td>
-                        @item.Surname
-                    </td>
-                    <td>
-                        @item.Email
-                    </td>
-                    <td>
-                        @(item.IsActive ? "Yes" : "No")
-                    </td>
-                    <td>
+                    <tr>
+                        <td>
+                            @u.Id
+                        </td>
+                        <td>
+                            @u.Forename
+                        </td>
+                        <td>
+                            @u.Surname
+                        </td>
+                        <td>
+                            @u.Email
+                        </td>
+                        <td>
+                            @(u.IsActive ? "Yes" : "No")
+                        </td>
+                        <td>
                             <Dropdown>
                                 <DropdownToggleButton Color="ButtonColor.Secondary">Actions</DropdownToggleButton>
                                 <DropdownMenu>
@@ -44,18 +47,52 @@
                                     <DropdownItem To="#" Type="ButtonType.Link">Delete</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
                 }
+            }
+            else
+            {
+                @foreach (var u in users)
+                {
+                    <tr>
+                        <td>
+                            @u.Id
+                        </td>
+                        <td>
+                            @u.Forename
+                        </td>
+                        <td>
+                            @u.Surname
+                        </td>
+                        <td>
+                            @u.Email
+                        </td>
+                        <td>
+                            @(u.IsActive ? "Yes" : "No")
+                        </td>
+                        <td>
+                            <Dropdown>
+                                <DropdownToggleButton Color="ButtonColor.Secondary">Actions</DropdownToggleButton>
+                                <DropdownMenu>
+                                    <DropdownItem To="#" Type="ButtonType.Link">View</DropdownItem>
+                                    <DropdownItem To="#" Type="ButtonType.Link">Edit</DropdownItem>
+                                    <DropdownItem To="#" Type="ButtonType.Link">Delete</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </td>
+                    </tr>
+                }
+            }
         </tbody>
-    </table>
+        </table>
 </div>
 
 <div>
     <div class="btn-group" role="group">
         <a asp-controller="Users" asp-action="List" class="btn btn-default">Show All</a>
-        <a href="#" class="btn btn-default">Active Only</a>
-        <a href="#" class="btn btn-default">Non Active</a>
+        <button class="btn btn-default" @onclick="@(() => FilterUsers(true))">Active Only</button>
+        <button @onclick="@(() => FilterUsers(false))" class="btn btn-default">Non Active</button>
     </div>
 
     <a href="#" class="btn btn-primary float-end">
