@@ -17,16 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UserManagement_Data\UserManagement_Data.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="VM\" />
     <None Remove="Pages\User\" />
+    <None Remove="Services\" />
+    <None Remove="Services\Implementations\" />
+    <None Remove="Services\Interfaces\" />
+    <None Remove="DtoModel\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="VM\" />
     <Folder Include="Pages\User\" />
+    <Folder Include="Services\" />
+    <Folder Include="Services\Implementations\" />
+    <Folder Include="Services\Interfaces\" />
+    <Folder Include="DtoModel\" />
   </ItemGroup>
 </Project>

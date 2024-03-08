@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="DtoModel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DtoModel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UserManagement_Data\UserManagement_Data.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.EntityFrameworkCore, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" />
+  </ItemGroup>
 </Project>

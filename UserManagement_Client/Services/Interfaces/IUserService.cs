@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using UserManagement.Models;
+using UserManagement_Services.DTO;
 
-namespace UserManagement.Services.Domain.Interfaces;
+namespace UserManagement_Client.Interfaces;
 
 public interface IUserService 
 {
@@ -10,6 +10,6 @@ public interface IUserService
     /// </summary>
     /// <param name="isActive"></param>
     /// <returns></returns>
-    IEnumerable<User> FilterByActive(bool isActive);
-    IEnumerable<User> GetAll();
+    IEnumerable<UserDTO> FilterByActive(bool isActive);
+    IEnumerable<UserDTO> GetAll();
 }
