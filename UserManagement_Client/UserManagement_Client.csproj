@@ -21,4 +21,10 @@
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="VM\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="VM\" />
+  </ItemGroup>
 </Project>

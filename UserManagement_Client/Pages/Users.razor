@@ -43,7 +43,7 @@
                                 <DropdownToggleButton Color="ButtonColor.Secondary">Actions</DropdownToggleButton>
                                 <DropdownMenu>
                                     <DropdownItem To="#" Type="ButtonType.Link">View</DropdownItem>
-                                    <DropdownItem To="#" Type="ButtonType.Link">Edit</DropdownItem>
+                                    <DropdownItem To="@($"user/edit/{u.Id}")" Type="ButtonType.Link">Edit</DropdownItem>
                                     <DropdownItem To="#" Type="ButtonType.Link">Delete</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
@@ -76,7 +76,7 @@
                                 <DropdownToggleButton Color="ButtonColor.Secondary">Actions</DropdownToggleButton>
                                 <DropdownMenu>
                                     <DropdownItem To="#" Type="ButtonType.Link">View</DropdownItem>
-                                    <DropdownItem To="#" Type="ButtonType.Link">Edit</DropdownItem>
+                                    <DropdownItem To="@($"user/edit/{u.Id}")" Type="ButtonType.Link">Edit</DropdownItem>
                                     <DropdownItem To="#" Type="ButtonType.Link">Delete</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
@@ -95,7 +95,7 @@
         <button @onclick="@(() => FilterUsers(false))" class="btn btn-default">Non Active</button>
     </div>
 
-    <a href="#" class="btn btn-primary float-end">
+    <a href="user/create" class="btn btn-primary float-end">
         Add User
     </a>
 </div>
