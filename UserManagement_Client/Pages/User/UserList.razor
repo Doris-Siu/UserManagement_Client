@@ -42,9 +42,9 @@
                             <Dropdown>
                                 <DropdownToggleButton Color="ButtonColor.Secondary">Actions</DropdownToggleButton>
                                 <DropdownMenu>
-                                    <DropdownItem To="#" Type="ButtonType.Link">View</DropdownItem>
+                                    <DropdownItem To="@($"user/view/{u.Id}")" Type="ButtonType.Link">View</DropdownItem>
                                     <DropdownItem To="@($"user/edit/{u.Id}")" Type="ButtonType.Link">Edit</DropdownItem>
-                                    <DropdownItem To="#" Type="ButtonType.Link">Delete</DropdownItem>
+                                    <DropdownItem To="@($"user/delete/{u.Id}")" Type="ButtonType.Link">Delete</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </td>
@@ -75,9 +75,9 @@
                             <Dropdown>
                                 <DropdownToggleButton Color="ButtonColor.Secondary">Actions</DropdownToggleButton>
                                 <DropdownMenu>
-                                    <DropdownItem To="#" Type="ButtonType.Link">View</DropdownItem>
+                                    <DropdownItem To="@($"user/view/{u.Id}")" Type="ButtonType.Link">View</DropdownItem>
                                     <DropdownItem To="@($"user/edit/{u.Id}")" Type="ButtonType.Link">Edit</DropdownItem>
-                                    <DropdownItem To="#" Type="ButtonType.Link">Delete</DropdownItem>
+                                    <DropdownItem To="@($"user/delete/{u.Id}")"Type="ButtonType.Link">Delete</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </td>

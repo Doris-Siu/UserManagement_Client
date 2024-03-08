@@ -1,0 +1,45 @@
+﻿@page "/user/view/{id:int}"
+@*@inject IUserService _userService*@
+@*UNDO - expert*@
+
+
+@inject NavigationManager _navigationManager
+
+
+<div>
+    <h3 class="card-title text-primary mb-3">View User</h3>
+</div>
+
+<p>A list of all actions that have been performed against that user</p>
+
+@*UNDO - advanced - data logging*@
+
+<div class="form-group py-2">
+    <NavLink href="/users" class="btn btn-secondary">Back to User List</NavLink>
+</div>
+
+
+
+
+@code {
+    private List<User> users = new(){
+            new User { Id = 1, Forename = "Peter", Surname = "Loew", Email = "ploew@example.com", IsActive = true },
+            new User { Id = 2, Forename = "Benjamin Franklin", Surname = "Gates", Email = "bfgates@example.com", IsActive = true },
+            new User { Id = 3, Forename = "Castor", Surname = "Troy", Email = "ctroy@example.com", IsActive = false },
+            new User { Id = 4, Forename = "Memphis", Surname = "Raines", Email = "mraines@example.com", IsActive = true },
+            new User { Id = 5, Forename = "Stanley", Surname = "Goodspeed", Email = "sgodspeed@example.com", IsActive = true },
+            new User { Id = 6, Forename = "H.I.", Surname = "McDunnough", Email = "himcdunnough@example.com", IsActive = true },
+            new User { Id = 7, Forename = "Cameron", Surname = "Poe", Email = "cpoe@example.com", IsActive = false },
+            new User { Id = 8, Forename = "Edward", Surname = "Malus", Email = "emalus@example.com", IsActive = false },
+            new User { Id = 9, Forename = "Damon", Surname = "Macready", Email = "dmacready@example.com", IsActive = false },
+            new User { Id = 10, Forename = "Johnny", Surname = "Blaze", Email = "jblaze@example.com", IsActive = true },
+            new User { Id = 11, Forename = "Robin", Surname = "Feld", Email = "rfeld@example.com", IsActive = true },
+    };
+
+    [Parameter]
+    public int Id { get; set; }
+
+
+    private UserDTO User { get; set; } = new();
+
+}
