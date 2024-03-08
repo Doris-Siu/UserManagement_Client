@@ -64,7 +64,7 @@
 </div>
 
 @code {
-        List<User> users = new(){
+    private List<User> users = new(){
             new User { Id = 1, Forename = "Peter", Surname = "Loew", Email = "ploew@example.com", IsActive = true },
             new User { Id = 2, Forename = "Benjamin Franklin", Surname = "Gates", Email = "bfgates@example.com", IsActive = true },
             new User { Id = 3, Forename = "Castor", Surname = "Troy", Email = "ctroy@example.com", IsActive = false },
@@ -78,4 +78,12 @@
             new User { Id = 11, Forename = "Robin", Surname = "Feld", Email = "rfeld@example.com", IsActive = true },
     };
 
+    private bool showFilteredUsers = false;
+    private bool activeFilter = false; 
+
+    private void FilterUsers(bool filterByActive)
+    {
+        showFilteredUsers = true;
+        activeFilter = filterByActive;
+    }
     }
