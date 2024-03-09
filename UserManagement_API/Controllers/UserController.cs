@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using UserManagement_Client.VM;
+using UserManagement_API.DtoModel;
 using UserManagement_Data;
 using UserManagement_Data.Data;
 
@@ -42,10 +42,23 @@ namespace UserManagement_API.Controllers
             }
             return new UserDTO();
 
-
+        }
             //// POST api/values
-            //    [HttpPost]
+            [HttpPost]
+            public async Task<ActionResult<UserDTO?>> Create([FromBody] UserDTO objDTO)
+        {
+            try
+            {
+                var obj = _mapper.Map<UserDTO, User>(objDTO);
+                var addedObj = _dbContext.Users.Add(obj);
+                await _dbContext.SaveChangesAsync();
 
+                return Ok(_mapper.Map<User, UserDTO>(addedObj.Entity));
+            }catch(Exception ex)
+            {
+                return BadRequest();
+            }
+            }
 
 
             //// PUT api/values/5
@@ -59,6 +72,6 @@ namespace UserManagement_API.Controllers
             //public void Delete(int id)
             //{
             //}
-        }
+        
     }
 }

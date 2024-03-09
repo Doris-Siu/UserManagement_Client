@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using UserManagement_Data;
-using UserManagement_Client.VM;
+using UserManagement_API.DtoModel;
 
 namespace Tangy_Business.Mapper
 {

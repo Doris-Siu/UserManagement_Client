@@ -20,8 +20,11 @@
     <ProjectReference Include="..\UserManagement_Data\UserManagement_Data.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\UserManagement_Client\UserManagement_Client.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="DtoModel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DtoModel\" />
   </ItemGroup>
 </Project>

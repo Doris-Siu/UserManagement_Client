@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace UserManagement_Client.DtoModel
+namespace UserManagement_API.DtoModel
 {
 	public class UserDTO
 	{

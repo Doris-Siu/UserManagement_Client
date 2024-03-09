@@ -1,11 +1,10 @@
 ﻿@page "/user/create"
 @page "/user/edit/{id:int}"
 
-@*@inject IUserService _userService*@
-@*UNDO - expert*@
 
 
 @inject NavigationManager _navigationManager
+@inject IUserService _userService
 
 
     <div>
@@ -14,36 +13,36 @@
 
     <div class="col-md-10">
        
-        <EditForm Model="User">
+        <EditForm Model="InputUser" OnValidSubmit="UpsertUser">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="form-group">
                 <label>Forename</label>
-                <InputText @bind-Value="User.Forename" class="form-control"></InputText>
-                <ValidationMessage For="() => User.Forename"></ValidationMessage>
+                <InputText @bind-Value="InputUser.Forename" class="form-control"></InputText>
+                <ValidationMessage For="() => InputUser.Forename"></ValidationMessage>
             </div>
             <div class="form-group">
                 <label>Surname</label>
-                <InputText @bind-Value="User.Surname" class="form-control"></InputText>
-                <ValidationMessage For="() => User.Surname"></ValidationMessage>
+                <InputText @bind-Value="InputUser.Surname" class="form-control"></InputText>
+                <ValidationMessage For="() => InputUser.Surname"></ValidationMessage>
             </div>
             <div class="form-group">
                 <label>Date Of Birth</label>
-                <InputText @bind-Value="User.DateOfBirth" class="form-control"></InputText>
-                <ValidationMessage For="() => User.DateOfBirth"></ValidationMessage>
+                <InputText @bind-Value="InputUser.DateOfBirth" class="form-control"></InputText>
+                <ValidationMessage For="() => InputUser.DateOfBirth"></ValidationMessage>
             </div>
 
             <div class="form-group">
                 <label>Email</label>
-                <InputText @bind-Value="User.Email" class="form-control"></InputText>
-                <ValidationMessage For="() => User.Email"></ValidationMessage>
+                <InputText @bind-Value="InputUser.Email" class="form-control"></InputText>
+                <ValidationMessage For="() => InputUser.Email"></ValidationMessage>
             </div>
 
 
             <div class="form-group col-6">
                 <div class="form-check">
                     <label class="form-check-label">Is Active?</label>
-                    <InputCheckbox @bind-Value="User.IsActive" class="form-check-input"></InputCheckbox>
+                    <InputCheckbox @bind-Value="InputUser.IsActive" class="form-check-input"></InputCheckbox>
                 </div>
             </div>
             
@@ -78,7 +77,7 @@
     public int Id { get; set; }
 
     private string Title { get; set; } = "Create";
-    private UserDTO User { get; set; } = new();
+    private UserDTO InputUser { get; set; } = new();
 
 
     protected override void OnInitialized()
@@ -93,21 +92,26 @@
     }
 
     //UNDO - expert - API connection
-    @*private async Task UpsertProduct()
+    private async Task UpsertUser()
     {
-        if (User.Id == 0)
+        if (Id == 0)
         {
             //create
-            await _userRepository.Create(User);
+            var result = await _userService.Create(InputUser);
+            if (result.success)
+            {
+                _navigationManager.NavigateTo($"user/edit/{result.dto.Id}");
+            }
         }
-    } else
+        else
         {
             //update
-            await _userRepository.Update(User);
-
-
+            //await _userService.Update(User);
         }
+
         _navigationManager.NavigateTo("users");
-    }*@
+
+    }
+
 
 }
