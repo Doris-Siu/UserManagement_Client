@@ -1,51 +1,94 @@
 ﻿@page "/user/delete/{id:int}"
 
-@*@inject IUserService _userService*@
-@*UNDO - expert*@
-
-
+@inject IUserService _userService
 @inject NavigationManager _navigationManager
 
 
 <div>
-     <h3 class="card-title text-primary mb-3">Delete User</h3>
+    <h3 class="card-title text-primary mb-3">Delete User</h3>
 </div>
 
+@if (IsProcessing)
+    {
+    <div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
+        <img src="images/ajax-loader.gif" />
+    </div>
+    }
+    else
+    {
 <p>Do you really want to delete this user?</p>
-    
+
 <div class="form-group py-2">
-    <button class="btn btn-danger" @onclick="()=>HandleDelete(Id)">Yes and delete</button>
-    <NavLink href="/users" class="btn btn-secondary">No and back to User List</NavLink>
+    <EditForm Model="InputUser" OnValidSubmit="HandleDelete">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label>Forename</label>
+            <InputText @bind-Value="InputUser.Forename" class="form-control"></InputText>
+            <ValidationMessage For="() => InputUser.Forename"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <label>Surname</label>
+            <InputText @bind-Value="InputUser.Surname" class="form-control"></InputText>
+            <ValidationMessage For="() => InputUser.Surname"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <label>Date Of Birth</label>
+            <InputText @bind-Value="InputUser.DateOfBirth" class="form-control"></InputText>
+            <ValidationMessage For="() => InputUser.DateOfBirth"></ValidationMessage>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <InputText @bind-Value="InputUser.Email" class="form-control"></InputText>
+            <ValidationMessage For="() => InputUser.Email"></ValidationMessage>
+        </div>
+
+
+        <div class="form-group col-6">
+            <div class="form-check">
+                <label class="form-check-label">Is Active?</label>
+                <InputCheckbox @bind-Value="InputUser.IsActive" class="form-check-input"></InputCheckbox>
+            </div>
+        </div>
+
+
+
+        <div class="form-group py-2">
+            <button class="btn btn-primary">Delete</button>
+            <NavLink href="/users" class="btn btn-secondary">Back to User List</NavLink>
+        </div>
+
+    </EditForm>
+    
 </div>
 
 
-   
+    }
 
 @code {
-    private List<UserDTO> users = new(){
-            new UserDTO { Id = 1, Forename = "Peter", Surname = "Loew", Email = "ploew@example.com", IsActive = true },
-            new UserDTO { Id = 2, Forename = "Benjamin Franklin", Surname = "Gates", Email = "bfgates@example.com", IsActive = true },
-            new UserDTO { Id = 3, Forename = "Castor", Surname = "Troy", Email = "ctroy@example.com", IsActive = false },
-            new UserDTO { Id = 4, Forename = "Memphis", Surname = "Raines", Email = "mraines@example.com", IsActive = true },
-            new UserDTO { Id = 5, Forename = "Stanley", Surname = "Goodspeed", Email = "sgodspeed@example.com", IsActive = true },
-            new UserDTO { Id = 6, Forename = "H.I.", Surname = "McDunnough", Email = "himcdunnough@example.com", IsActive = true },
-            new UserDTO { Id = 7, Forename = "Cameron", Surname = "Poe", Email = "cpoe@example.com", IsActive = false },
-            new UserDTO { Id = 8, Forename = "Edward", Surname = "Malus", Email = "emalus@example.com", IsActive = false },
-            new UserDTO { Id = 9, Forename = "Damon", Surname = "Macready", Email = "dmacready@example.com", IsActive = false },
-            new UserDTO { Id = 10, Forename = "Johnny", Surname = "Blaze", Email = "jblaze@example.com", IsActive = true },
-            new UserDTO { Id = 11, Forename = "Robin", Surname = "Feld", Email = "rfeld@example.com", IsActive = true },
-    };
+
 
     [Parameter]
     public int Id { get; set; }
+    public bool IsProcessing { get; set; } = false;
 
-
-    private UserDTO User { get; set; } = new();
-
-
-    //UNDO - expert - API connection
-    private void HandleDelete(int id)
+    private UserDTO InputUser { get; set; } = new();
+    protected override async Task OnInitializedAsync()
     {
+
+
+        IsProcessing = true;
+        var result = await _userService.Get(Id);
+        InputUser = result;
+        IsProcessing = false;
+
+
+    }
+
+    private async Task HandleDelete()
+    {
+         await _userService.Delete(InputUser);
         _navigationManager.NavigateTo("users");
     }
 }

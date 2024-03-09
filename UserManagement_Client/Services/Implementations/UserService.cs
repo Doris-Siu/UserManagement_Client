@@ -98,6 +98,21 @@ public class UserService : IUserService
             return (false, null, response.ReasonPhrase);
     }
 
+    public async Task<(bool success, UserDTO dto, string error)> Delete(UserDTO dto)
+    {
+        using var apiHttpClient = _httpClientFactory.CreateClient("API");
+        var response = await apiHttpClient.DeleteAsync($"api/User/{dto.Id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var contentResponse = await response.Content.ReadAsStringAsync();
+            var user = JsonConvert.DeserializeObject<UserDTO>(contentResponse);
+            return (true, user, null);
+        }
+        else
+            return (false, null, response.ReasonPhrase);
+    }
+
 
 
 }

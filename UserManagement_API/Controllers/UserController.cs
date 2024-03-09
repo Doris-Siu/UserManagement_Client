@@ -65,7 +65,7 @@ namespace UserManagement_API.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDTO?>> Update(int id, [FromBody] UserDTO objDTO)
+        public async Task<ActionResult<UserDTO?>> Update([FromBody] UserDTO objDTO)
         {
             
                 var objFromDb = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == objDTO.Id);
@@ -79,17 +79,28 @@ namespace UserManagement_API.Controllers
 
                 _dbContext.Users.Update(objFromDb);
                     await _dbContext.SaveChangesAsync();
-                    return _mapper.Map<User, UserDTO>(objFromDb);
+                    return Ok(_mapper.Map<User, UserDTO>(objFromDb));
                 }
-                return objDTO;
+                return Ok(objDTO);
             }
+
+
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<bool>> Delete(int id)
+        {
+            var objFromDb = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (objFromDb != null)
+            {
+                _dbContext.Users.Remove(objFromDb);
+                await _dbContext.SaveChangesAsync();
+                return Ok();
+            }
+            return BadRequest();
         }
 
-        //// DELETE api/values/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+    }
 
-    
+
+
 }
