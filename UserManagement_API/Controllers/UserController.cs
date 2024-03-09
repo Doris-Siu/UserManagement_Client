@@ -31,21 +31,22 @@ namespace UserManagement_API.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public async Task<UserDTO> Get(long id)
+        public async Task<ActionResult<UserDTO?>> Get(long id)
         {
 
             var obj = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
 
             if (obj != null)
             {
-                return _mapper.Map<User, UserDTO>(obj);
+                return Ok(_mapper.Map<User, UserDTO>(obj));
             }
-            return new UserDTO();
+            return Ok(new UserDTO());
 
         }
-            //// POST api/values
-            [HttpPost]
-            public async Task<ActionResult<UserDTO?>> Create([FromBody] UserDTO objDTO)
+
+         // POST api/values
+        [HttpPost]
+        public async Task<ActionResult<UserDTO?>> Create([FromBody] UserDTO objDTO)
         {
             try
             {
@@ -54,24 +55,41 @@ namespace UserManagement_API.Controllers
                 await _dbContext.SaveChangesAsync();
 
                 return Ok(_mapper.Map<User, UserDTO>(addedObj.Entity));
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 return BadRequest();
             }
+        }
+
+
+        // PUT api/values/5
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserDTO?>> Update(int id, [FromBody] UserDTO objDTO)
+        {
+            
+                var objFromDb = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == objDTO.Id);
+                if (objFromDb != null)
+                {
+                    objFromDb.Forename = objDTO.Forename;
+                    objFromDb.Surname = objDTO.Surname;
+                    objFromDb.DateOfBirth = objDTO.DateOfBirth;
+                    objFromDb.Email = objDTO.Email;
+                    objFromDb.IsActive = objDTO.IsActive;
+
+                _dbContext.Users.Update(objFromDb);
+                    await _dbContext.SaveChangesAsync();
+                    return _mapper.Map<User, UserDTO>(objFromDb);
+                }
+                return objDTO;
             }
+        }
 
+        //// DELETE api/values/5
+        //[HttpDelete("{id}")]
+        //public void Delete(int id)
+        //{
+        //}
 
-            //// PUT api/values/5
-            //[HttpPut("{id}")]
-            //public void Put(int id, [FromBody]string value)
-            //{
-            //}
-
-            //// DELETE api/values/5
-            //[HttpDelete("{id}")]
-            //public void Delete(int id)
-            //{
-            //}
-        
-    }
+    
 }

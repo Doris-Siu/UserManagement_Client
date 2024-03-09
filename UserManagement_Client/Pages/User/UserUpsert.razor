@@ -7,12 +7,19 @@
 @inject IUserService _userService
 
 
-    <div>
-        <h3 class="card-title text-primary mb-3">@Title User</h3>
+<div>
+    <h3 class="card-title text-primary mb-3">@Title User</h3>
+</div>
+@if (IsProcessing)
+    {
+    <div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
+        <img src="images/ajax-loader.gif" />
     </div>
-
+}
+else
+{
     <div class="col-md-10">
-       
+
         <EditForm Model="InputUser" OnValidSubmit="UpsertUser">
             <DataAnnotationsValidator />
             <ValidationSummary />
@@ -45,7 +52,7 @@
                     <InputCheckbox @bind-Value="InputUser.IsActive" class="form-check-input"></InputCheckbox>
                 </div>
             </div>
-            
+
 
 
             <div class="form-group py-2">
@@ -56,62 +63,49 @@
         </EditForm>
 
     </div>
-   
-
-@code {
-    private List<UserDTO> users = new(){
-            new UserDTO { Id = 1, Forename = "Peter", Surname = "Loew", Email = "ploew@example.com", IsActive = true },
-            new UserDTO { Id = 2, Forename = "Benjamin Franklin", Surname = "Gates", Email = "bfgates@example.com", IsActive = true },
-            new UserDTO { Id = 3, Forename = "Castor", Surname = "Troy", Email = "ctroy@example.com", IsActive = false },
-            new UserDTO { Id = 4, Forename = "Memphis", Surname = "Raines", Email = "mraines@example.com", IsActive = true },
-            new UserDTO { Id = 5, Forename = "Stanley", Surname = "Goodspeed", Email = "sgodspeed@example.com", IsActive = true },
-            new UserDTO { Id = 6, Forename = "H.I.", Surname = "McDunnough", Email = "himcdunnough@example.com", IsActive = true },
-            new UserDTO { Id = 7, Forename = "Cameron", Surname = "Poe", Email = "cpoe@example.com", IsActive = false },
-            new UserDTO { Id = 8, Forename = "Edward", Surname = "Malus", Email = "emalus@example.com", IsActive = false },
-            new UserDTO { Id = 9, Forename = "Damon", Surname = "Macready", Email = "dmacready@example.com", IsActive = false },
-            new UserDTO { Id = 10, Forename = "Johnny", Surname = "Blaze", Email = "jblaze@example.com", IsActive = true },
-            new UserDTO { Id = 11, Forename = "Robin", Surname = "Feld", Email = "rfeld@example.com", IsActive = true },
-    };
-
-    [Parameter]
-    public int Id { get; set; }
-
-    private string Title { get; set; } = "Create";
-    private UserDTO InputUser { get; set; } = new();
-
-
-    protected override void OnInitialized()
-    {
-        if (Id != 0)
-        {
-            //update
-            Title = "Edit";
-
-        }
-
     }
 
-    //UNDO - expert - API connection
-    private async Task UpsertUser()
-    {
-        if (Id == 0)
+    @code {
+        [Parameter]
+        public int Id { get; set; }
+
+
+        public bool IsProcessing { get; set; } = false;
+        private string Title { get; set; } = "Create";
+        private UserDTO InputUser { get; set; } = new();
+
+
+        protected override async Task OnInitializedAsync()
         {
-            //create
-            var result = await _userService.Create(InputUser);
-            if (result.success)
+            if (Id != 0)
             {
-                _navigationManager.NavigateTo($"user/edit/{result.dto.Id}");
+                //update
+                Title = "Edit";
+
+                IsProcessing = true;
+                var result = await _userService.Get(Id);
+                InputUser = result;
+                IsProcessing = false;
             }
-        }
-        else
-        {
-            //update
-            //await _userService.Update(User);
+
         }
 
-        _navigationManager.NavigateTo("users");
+        private async Task UpsertUser()
+        {
+            if (Id == 0)
+            {
+                //create
+                var result = await _userService.Create(InputUser);
+            }
+            else
+            {
+                //update
+                InputUser.Id = Id;
+                var result = await _userService.Update(InputUser);
+            }
+
+            _navigationManager.NavigateTo("users");
+
+        }
 
     }
-
-
-}

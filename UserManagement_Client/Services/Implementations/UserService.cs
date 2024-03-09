@@ -24,19 +24,32 @@ public class UserService : IUserService
 
     public async Task<UserDTO> Get(long userId)
     {
-        var response = await _httpClient.GetAsync($"/api/user/{userId}");
-        var content = await response.Content.ReadAsStringAsync();
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var user = JsonConvert.DeserializeObject<UserDTO>(content);
-            return user;
+            using var apiHttpClient = _httpClientFactory.CreateClient("API");
+            var response = await apiHttpClient.GetAsync($"/api/User/{userId}");
+            var content = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                var user = JsonConvert.DeserializeObject<UserDTO>(content);
+
+                return user;
+            }
+            else
+            {
+                return new UserDTO { Forename = response.ReasonPhrase };
+            }
         }
-        return new UserDTO();
+        catch(Exception ex)
+        {
+            return new UserDTO { Forename = ex.Message };
+        }
     }
 
     public async Task<IEnumerable<UserDTO>> Get()
     {
-        var response = await _httpClient.GetAsync("/api/user");
+        using var apiHttpClient = _httpClientFactory.CreateClient("API");
+        var response = await apiHttpClient.GetAsync("/api/User");
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
@@ -47,6 +60,7 @@ public class UserService : IUserService
         return new List<UserDTO>();
     }
 
+
     public async Task<(bool success, UserDTO dto, string error)> Create(UserDTO dto)
     {
         using var apiHttpClient = _httpClientFactory.CreateClient("API");
@@ -54,6 +68,25 @@ public class UserService : IUserService
         var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
 
         var response = await apiHttpClient.PostAsync("api/User", bodyContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var contentResponse = await response.Content.ReadAsStringAsync();
+            var user = JsonConvert.DeserializeObject<UserDTO>(contentResponse);
+            return (true, user, null);
+        }
+        else
+            return (false, null, response.ReasonPhrase);
+    }
+
+
+    public async Task<(bool success,UserDTO dto, string error)> Update(UserDTO dto)
+    {
+        using var apiHttpClient = _httpClientFactory.CreateClient("API");
+        var content = JsonConvert.SerializeObject(dto);
+        var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+
+        var response = await apiHttpClient.PutAsync($"api/User/{dto.Id}", bodyContent);
 
         if (response.IsSuccessStatusCode)
         {
