@@ -1,7 +1,18 @@
 ﻿@page "/users"
 
+@inject IUserService _userService
+
+
 <PageTitle>Users</PageTitle>
 
+@if (IsProcessing)
+    {
+    <div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
+        <img src="images/ajax-loader.gif" />
+    </div>
+    }
+    else
+    {
 <h2>User List</h2>
 
 <div class="table-responsive">
@@ -11,17 +22,18 @@
                 <th>Id</th>
                 <th>Forename</th>
                 <th>Surname</th>
+                <th>Date of Birth</th>
                 <th>Email</th>
                 <th>Account Active</th>
                 <th style="width: 1px;"></th>
             </tr>
         </thead>
-         
+
         <tbody>
             @if (showFilteredUsers)
-            {
-                @foreach (var u in users.Where(u => activeFilter == u.IsActive))
                 {
+                @foreach (var u in Users.Where(u => activeFilter == u.IsActive))
+                    {
                     <tr>
                         <td>
                             @u.Id
@@ -31,6 +43,9 @@
                         </td>
                         <td>
                             @u.Surname
+                        </td>
+                        <td>
+                            @u.DateOfBirth
                         </td>
                         <td>
                             @u.Email
@@ -49,12 +64,12 @@
                             </Dropdown>
                         </td>
                     </tr>
+                    }
                 }
-            }
-            else
-            {
-                @foreach (var u in users)
+                else
                 {
+                @foreach (var u in Users)
+                    {
                     <tr>
                         <td>
                             @u.Id
@@ -64,6 +79,9 @@
                         </td>
                         <td>
                             @u.Surname
+                        </td>
+                        <td>
+                            @u.DateOfBirth
                         </td>
                         <td>
                             @u.Email
@@ -77,15 +95,15 @@
                                 <DropdownMenu>
                                     <DropdownItem To="@($"user/view/{u.Id}")" Type="ButtonType.Link">View</DropdownItem>
                                     <DropdownItem To="@($"user/edit/{u.Id}")" Type="ButtonType.Link">Edit</DropdownItem>
-                                    <DropdownItem To="@($"user/delete/{u.Id}")"Type="ButtonType.Link">Delete</DropdownItem>
+                                    <DropdownItem To="@($"user/delete/{u.Id}")" Type="ButtonType.Link">Delete</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </td>
                     </tr>
+                    }
                 }
-            }
         </tbody>
-        </table>
+    </table>
 </div>
 
 <div>
@@ -99,28 +117,25 @@
         Add User
     </a>
 </div>
+    }
 
 @code {
-    private List<UserDTO> users = new(){
-            new UserDTO { Id = 1, Forename = "Peter", Surname = "Loew", Email = "ploew@example.com", IsActive = true },
-            new UserDTO { Id = 2, Forename = "Benjamin Franklin", Surname = "Gates", Email = "bfgates@example.com", IsActive = true },
-            new UserDTO { Id = 3, Forename = "Castor", Surname = "Troy", Email = "ctroy@example.com", IsActive = false },
-            new UserDTO { Id = 4, Forename = "Memphis", Surname = "Raines", Email = "mraines@example.com", IsActive = true },
-            new UserDTO { Id = 5, Forename = "Stanley", Surname = "Goodspeed", Email = "sgodspeed@example.com", IsActive = true },
-            new UserDTO { Id = 6, Forename = "H.I.", Surname = "McDunnough", Email = "himcdunnough@example.com", IsActive = true },
-            new UserDTO { Id = 7, Forename = "Cameron", Surname = "Poe", Email = "cpoe@example.com", IsActive = false },
-            new UserDTO { Id = 8, Forename = "Edward", Surname = "Malus", Email = "emalus@example.com", IsActive = false },
-            new UserDTO { Id = 9, Forename = "Damon", Surname = "Macready", Email = "dmacready@example.com", IsActive = false },
-            new UserDTO { Id = 10, Forename = "Johnny", Surname = "Blaze", Email = "jblaze@example.com", IsActive = true },
-            new UserDTO { Id = 11, Forename = "Robin", Surname = "Feld", Email = "rfeld@example.com", IsActive = true },
-    };
+    public bool IsProcessing { get; set; } = false;
+    public IEnumerable<UserDTO> Users { get; set; } = new List<UserDTO>();
 
     private bool showFilteredUsers = false;
-    private bool activeFilter = false; 
+    private bool activeFilter = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsProcessing = true;
+        Users = await _userService.Get();
+        IsProcessing = false;
+    }
 
     private void FilterUsers(bool filterByActive)
     {
         showFilteredUsers = true;
         activeFilter = filterByActive;
     }
-    }
+}
