@@ -1,38 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-
-using UserManagement.Services.Domain.Interfaces;
-using UserManagement_Data.Data;
-using UserManagement_Services.DTO;
+﻿using Newtonsoft.Json;
+using UserManagement_Client.Interfaces;
+using UserManagement_Client.VM;
 
 namespace UserManagement.Services.Domain.Implementations;
 
 public class UserService : IUserService
 {
-    private readonly ApplicationDbContext _dataAccess;
-    public UserService(ApplicationDbContext dataAccess) => _dataAccess = dataAccess;
+    private readonly HttpClient _httpClient;
 
-    /// <summary>
-    /// Return users by active state
-    /// </summary>
-    /// <param name="isActive"></param>
-    /// <returns></returns>
-    public IEnumerable<UserDTO> FilterByActive(bool isActive)
-        => _dataAccess.ApplicationUsers.Where(x=> isActive != x.LockoutEnabled).Select(x =>
-    new UserDTO
-    {
-        Email = x.Email,
-        Id = x.Id,
-        Name = x.Name,
-        PhoneNumber = x.PhoneNumber
-    });
+    private IConfiguration _configuration;
+    private string _baseUrl;
 
-    public IEnumerable<UserDTO> GetAll() => _dataAccess.ApplicationUsers.Select(x =>
-    new UserDTO
+    public UserService(HttpClient httpClient, IConfiguration configuration)
     {
-        Email = x.Email,
-        Id = x.Id,
-        Name = x.Name,
-        PhoneNumber = x.PhoneNumber
-    });
+        _httpClient = httpClient;
+        _configuration = configuration;
+        _baseUrl = _configuration.GetSection("BaseUrl").Value;
+    }
+
+    public async Task<UserDTO> Get(long userId)
+    {
+        var response = await _httpClient.GetAsync($"/api/user/{userId}");
+        var content = await response.Content.ReadAsStringAsync();
+        if (response.IsSuccessStatusCode)
+        {
+            var user = JsonConvert.DeserializeObject<UserDTO>(content);
+            return user;
+        }
+        return new UserDTO();
+    }
+
+        public async Task<IEnumerable<UserDTO>> Get()
+    {
+        var response = await _httpClient.GetAsync("/api/user");
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            var users = JsonConvert.DeserializeObject<IEnumerable<UserDTO>>(content);
+            return users;
+        }
+
+        return new List<UserDTO>();
+    }
 }
+
