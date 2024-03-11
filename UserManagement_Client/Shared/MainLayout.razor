@@ -1,16 +1,21 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="bb-page">
-
+    @if (!notAuthorized)
+        {
     <Sidebar @ref="sidebar"
              IconName="IconName.BootstrapFill"
              Title="User Manangement"
              DataProvider="SidebarDataProvider" />
-
+        }
     <main>
+
         <div class="bb-top-row px-4 d-flex justify-content-end">
-            <LoginDisplay />
-        </div>
+            @if (!notAuthorized)
+                {
+                <UserManagement_Client.Pages.Authentication.Logout />
+                }
+            </div>
 
         <article class="content px-4">
             <div class="py-2">
@@ -22,6 +27,13 @@
 </div>
 
 @code {
+    [Inject]
+    public NavigationManager _navigationManager { get; set; }
+    [Inject]
+    public ILocalStorageService _localStorage { get; set; }
+
+    bool notAuthorized { get; set; } = false;
+
     private Sidebar sidebar = default!;
     private IEnumerable<NavItem> navItems = default!;
 
@@ -36,12 +48,35 @@
     private IEnumerable<NavItem> GetNavItems()
     {
         navItems = new List<NavItem>
-    {
+        {
             new NavItem { Id = "1", Href = "/", IconName = IconName.HouseDoorFill, Text = "Home", Match=NavLinkMatch.All},
             new NavItem { Id = "2", Href = "/users", IconName = IconName.PlusSquareFill, Text = "User List"},
         };
 
         return navItems;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+
+        var currentUser = await _localStorage.GetItemAsync<UserDTO>("currentUser");
+        if (currentUser == null)
+        {
+            notAuthorized = true;
+            var returnUrl = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
+            if (string.IsNullOrEmpty(returnUrl))
+            {
+                _navigationManager.NavigateTo("login");
+            }
+            else
+            {
+                _navigationManager.NavigateTo($"login?returnUrl={returnUrl}");
+            }
+        }
+        else
+        {
+            notAuthorized = false;
+        }
+
     }
 }
 

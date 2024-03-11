@@ -1,0 +1,89 @@
+﻿@using System;
+@using System.Web;
+@using Microsoft.AspNetCore.Components;
+@using UserManagement_Client.Interfaces;
+@using System.Linq;
+@using Blazored.LocalStorage;
+@page "/login"
+
+<EditForm Model="user" OnValidSubmit="LoginUser">
+    <DataAnnotationsValidator />
+    <div class="py-4">
+        <div class=" row form-group ">
+            <div class="col-6 offset-3 ">
+                <div class="card border">
+                    <div class="card-body px-lg-5 pt-4">
+                        <h3 class="col-12 purple-text text-center py-2">
+                            <strong>Sign In</strong>
+                        </h3>
+
+                        @if (ShowSignInErrors)
+                        {
+                            <p class="text-center text-danger">@Errors</p>
+                        }
+
+
+                        <div class="py-2">
+                            <InputText @bind-Value="user.Email" id="email" placeholder="Email..." class="form-control mb-2" />
+                            <ValidationMessage For="(() => user.Email)"></ValidationMessage>
+
+                        </div>
+                        <div class="py-2">
+                            <InputText @bind-Value="user.DateOfBirth" type="password" placeholder="Password..." id="password" class="form-control mb-2" />
+                            <ValidationMessage For="(() => user.DateOfBirth)"></ValidationMessage>
+                        </div>
+                        <div class="py-2 align-item">
+                            <button type="submit" class="custom-btn"><i class="bi bi-person-bounding-box"></i> Sign in</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+@code {
+    UserDTO user = new UserDTO { Forename = "test", Surname = "test"};
+    public bool IsProcessing { get; set; } = false;
+    public bool ShowSignInErrors { get; set; }
+    public string Errors { get; set; }
+    [Inject]
+    public NavigationManager _navigationManager { get; set; }
+    [Inject]
+    public IUserService _userService { get; set; }
+    [Inject]
+    public ILocalStorageService _localStorage { get; set; }
+
+    public string ReturnUrl { get; set; }
+
+    private async Task LoginUser()
+    {
+        ShowSignInErrors = false;
+        IsProcessing = true;
+        var currentUser = await _userService.Get(user.Email,user.DateOfBirth);
+
+        if (currentUser != null)
+        {
+            await _localStorage.SetItemAsync("currentUser", user);
+            //sign in is successful
+            var absoluteUri = new Uri(_navigationManager.Uri);
+            var queryParam = HttpUtility.ParseQueryString(absoluteUri.Query);
+            ReturnUrl = queryParam["returnUrl"];
+            if (string.IsNullOrEmpty(ReturnUrl))
+            {
+                _navigationManager.NavigateTo("/", true);
+            }
+            else
+            {
+                _navigationManager.NavigateTo("/" + ReturnUrl, true);
+            }
+        }
+        else
+        {
+            //failure
+            Errors = "Invalid Login/Password";
+            ShowSignInErrors = true;
+
+        }
+        IsProcessing = false;
+    }
+}

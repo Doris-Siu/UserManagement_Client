@@ -113,7 +113,18 @@ public class UserService : IUserService
             return (false, null, response.ReasonPhrase);
     }
 
+    public async Task<UserDTO?> Get(string emailAddress, string dateOfBirth)
+    {
+        using var apiHttpClient = _httpClientFactory.CreateClient("API");
+        var response = await apiHttpClient.GetAsync($"/api/User/email/{emailAddress}/dateOfBirth/{dateOfBirth}");
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            var users = JsonConvert.DeserializeObject<UserDTO>(content);
+            return users;
+        }
 
-
+        return null;
+    }
 }
 

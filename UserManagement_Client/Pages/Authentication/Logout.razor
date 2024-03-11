@@ -1,0 +1,26 @@
+﻿@page "/logout"
+
+@using System;
+@using Blazored.LocalStorage;
+@using Microsoft.AspNetCore.Components;
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+
+    <button class="nav-link btn btn-link" @onclick="BeginLogOut">Log out</button>
+
+
+@code{
+    [Inject]
+    public NavigationManager _navigationManager { get; set; }
+    [Inject]
+    public ILocalStorageService _localStorage { get; set; }
+
+    private async Task BeginLogOut()
+    {
+        await _localStorage.SetItemAsStringAsync("currentUser", "");
+        _navigationManager.NavigateTo("/login",true);
+    }
+}
+

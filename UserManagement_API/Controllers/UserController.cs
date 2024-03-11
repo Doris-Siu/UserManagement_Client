@@ -25,7 +25,7 @@ namespace UserManagement_API.Controllers
         [HttpGet]
         public async Task<IEnumerable<UserDTO>> Get()
         {
-            var response = _mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(_dbContext.Users);
+            var response = _mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(_dbContext.Users.OrderBy(x=>x.Id));
             return response;
         }
 
@@ -43,8 +43,23 @@ namespace UserManagement_API.Controllers
             return Ok(new UserDTO());
 
         }
+        // GET api/values/5
+        [HttpGet]
+        [Route("email/{email}/dateOfBirth/{dateOfBirth}")]
+        public async Task<ActionResult<UserDTO?>> Get(string email, string dateOfBirth)
+        {
 
-         // POST api/values
+            var obj = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower()
+            && dateOfBirth == u.DateOfBirth);
+
+            if (obj != null)
+            {
+                return Ok(_mapper.Map<User, UserDTO>(obj));
+            }
+            return NotFound();
+
+        }
+        // POST api/values
         [HttpPost]
         public async Task<ActionResult<UserDTO?>> Create([FromBody] UserDTO objDTO)
         {
