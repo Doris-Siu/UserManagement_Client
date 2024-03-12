@@ -16,10 +16,14 @@
     public NavigationManager _navigationManager { get; set; }
     [Inject]
     public ILocalStorageService _localStorage { get; set; }
+    [Inject]
+    public ILogger _logger { get; set; }
+
 
     private async Task BeginLogOut()
     {
         await _localStorage.SetItemAsStringAsync("currentUser", "");
+        await _logger.LogTrace("Logout");
         _navigationManager.NavigateTo("/login",true);
     }
 }

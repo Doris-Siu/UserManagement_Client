@@ -29,7 +29,7 @@ namespace UserManagement_API.Controllers
         public async Task<ActionResult<List<UserLogDTO?>>> Get(long userId)
         {
 
-            var logs = await _dbContext.UserLogs.Where(u => u.UserId == userId).ToListAsync(); ;
+            var logs = await _dbContext.UserLogs.Where(u => u.UserId == userId).OrderByDescending(x=>x.Id).ToListAsync(); ;
 
             if (logs != null)
             {

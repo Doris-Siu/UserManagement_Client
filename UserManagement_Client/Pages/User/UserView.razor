@@ -20,7 +20,7 @@ else
 
     <h3 class="card-title text-primary mb-3">View User</h3>
 
-    <p>A list of all actions that have been performed by @User.Forename @User.Surname.</p>
+    <p>A list of all actions that have been performed by @User.Forename @User.Surname, the top row is the latest action.</p>
 
     <div class="table-responsive">
         <table class="table table-striped">
@@ -72,6 +72,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await _logger.LogTrace($"Read a user id: {Id}");
         IsProcessing = true;
         User = await _userService.Get(Id);
         UserLog = await _logger.GetLog(Id);

@@ -46,18 +46,21 @@
     public bool IsProcessing { get; set; } = false;
     public bool ShowSignInErrors { get; set; }
     public string Errors { get; set; }
+
     [Inject]
     public NavigationManager _navigationManager { get; set; }
     [Inject]
     public IUserService _userService { get; set; }
     [Inject]
     public ILocalStorageService _localStorage { get; set; }
-    
+    [Inject]
+    public ILogger _logger { get; set; }
+
     public string ReturnUrl { get; set; }
 
     private async Task LoginUser()
     {
-        
+
         ShowSignInErrors = false;
         IsProcessing = true;
         var currentUser = await _userService.Get(user.Email,user.DateOfBirth);
@@ -69,12 +72,14 @@
             var absoluteUri = new Uri(_navigationManager.Uri);
             var queryParam = HttpUtility.ParseQueryString(absoluteUri.Query);
             ReturnUrl = queryParam["returnUrl"];
+            await _logger.LogTrace("Login");
             if (string.IsNullOrEmpty(ReturnUrl))
             {
                 _navigationManager.NavigateTo("/", true);
             }
             else
             {
+
                 _navigationManager.NavigateTo("/" + ReturnUrl, true);
             }
         }

@@ -67,7 +67,8 @@
     }
 
 @code {
-
+    [Inject]
+    public ILogger _logger { get; set; }
 
     [Parameter]
     public int Id { get; set; }
@@ -88,7 +89,9 @@
 
     private async Task HandleDelete()
     {
-         await _userService.Delete(InputUser);
+        await _userService.Delete(InputUser);
+        await _logger.LogTrace($"Delete a user: {InputUser.Forename} {InputUser.Surname} with id {InputUser.Id}.");
+
         _navigationManager.NavigateTo("users");
     }
 }

@@ -66,6 +66,9 @@ else
     }
 
     @code {
+        [Inject]
+        public ILogger _logger { get; set; }
+
         [Parameter]
         public int Id { get; set; }
 
@@ -96,12 +99,16 @@ else
             {
                 //create
                 var result = await _userService.Create(InputUser);
+                await _logger.LogTrace($"Create a user: {InputUser.Forename} {InputUser.Surname} with id {InputUser.Id}.");
+
             }
             else
             {
                 //update
                 InputUser.Id = Id;
                 var result = await _userService.Update(InputUser);
+                await _logger.LogTrace($"Edit a user: {InputUser.Forename} {InputUser.Surname} with id {InputUser.Id}.");
+
             }
 
             _navigationManager.NavigateTo("users");
