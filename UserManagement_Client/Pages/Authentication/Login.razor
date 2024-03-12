@@ -52,18 +52,19 @@
     public IUserService _userService { get; set; }
     [Inject]
     public ILocalStorageService _localStorage { get; set; }
-
+    
     public string ReturnUrl { get; set; }
 
     private async Task LoginUser()
     {
+        
         ShowSignInErrors = false;
         IsProcessing = true;
         var currentUser = await _userService.Get(user.Email,user.DateOfBirth);
 
         if (currentUser != null)
         {
-            await _localStorage.SetItemAsync("currentUser", user);
+            await _localStorage.SetItemAsync("currentUser", currentUser);
             //sign in is successful
             var absoluteUri = new Uri(_navigationManager.Uri);
             var queryParam = HttpUtility.ParseQueryString(absoluteUri.Query);

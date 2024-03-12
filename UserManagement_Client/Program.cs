@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using UserManagement.Services.Domain.Implementations;
+using UserManagement.Services.Implementations;
 using UserManagement_Client;
 using UserManagement_Client.Interfaces;
 using Blazored.LocalStorage;
@@ -17,6 +17,10 @@ builder.Services.AddHttpClient("API", config =>
 });
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<UserManagement_Client.Interfaces.ILogger, Logger>();
+
+
+
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddOidcAuthentication(options =>

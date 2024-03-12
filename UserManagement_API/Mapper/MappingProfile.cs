@@ -9,6 +9,7 @@ namespace Tangy_Business.Mapper
         public MappingProfile()
         {
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<UserLog, UserLogDTO>().ReverseMap();
         }
     }
 }

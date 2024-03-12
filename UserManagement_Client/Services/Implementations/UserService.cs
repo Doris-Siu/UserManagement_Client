@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using UserManagement_Client.Interfaces;
 using UserManagement_Client.DtoModel;
 
-namespace UserManagement.Services.Domain.Implementations;
+namespace UserManagement.Services.Implementations;
 
 public class UserService : IUserService
 {
