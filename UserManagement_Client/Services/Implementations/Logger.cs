@@ -53,4 +53,35 @@ public class Logger : UserManagement_Client.Interfaces.ILogger
         var response = await apiHttpClient.PostAsync("api/UserLog", bodyContent);
 
     }
+
+    public async Task<List<UserLogDTO>> GetLog(long userId)
+
+    {
+
+       
+            using var apiHttpClient = _httpClientFactory.CreateClient("API");
+
+            var response = await apiHttpClient.GetAsync($"api/UserLog/userId/{userId}");
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+
+            {
+
+            var userLogs = JsonConvert.DeserializeObject<List<UserLogDTO>>(content);
+
+                return userLogs;
+
+            }
+
+            else
+
+            {
+
+            return new List<UserLogDTO>();
+
+            }
+
+    }
 }

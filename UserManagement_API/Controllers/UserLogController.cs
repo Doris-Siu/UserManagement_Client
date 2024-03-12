@@ -26,16 +26,16 @@ namespace UserManagement_API.Controllers
         // GET api/values/5
         [HttpGet]
         [Route("userId/{userId}")]
-        public async Task<ActionResult<UserDTO?>> Get(long userId)
+        public async Task<ActionResult<List<UserLogDTO?>>> Get(long userId)
         {
 
-            var obj = await _dbContext.UserLogs.FirstOrDefaultAsync(u => u.Id == userId);
+            var logs = await _dbContext.UserLogs.Where(u => u.UserId == userId).ToListAsync(); ;
 
-            if (obj != null)
+            if (logs != null)
             {
-                return Ok(_mapper.Map<UserLog, UserLogDTO>(obj));
+                return Ok(_mapper.Map < List<UserLog>, List<UserLogDTO>> (logs));
             }
-            return Ok(new UserDTO());
+            return BadRequest();
 
         }
 
