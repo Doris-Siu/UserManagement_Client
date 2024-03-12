@@ -99,7 +99,7 @@ else
             {
                 //create
                 var result = await _userService.Create(InputUser);
-                await _logger.LogTrace($"Create a user: {InputUser.Forename} {InputUser.Surname} with id {InputUser.Id}.");
+                await _logger.LogTrace($"Create a user: {InputUser.Forename} {InputUser.Surname} with id {result.dto.Id}.");
 
             }
             else

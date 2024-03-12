@@ -22,8 +22,8 @@
 
     private async Task BeginLogOut()
     {
-        await _localStorage.SetItemAsStringAsync("currentUser", "");
         await _logger.LogTrace("Logout");
+        await _localStorage.SetItemAsStringAsync("currentUser", "");
         _navigationManager.NavigateTo("/login",true);
     }
 }
