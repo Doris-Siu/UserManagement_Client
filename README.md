@@ -7,6 +7,11 @@ The front-end application consumes API to perform CRUD operations.
 <br><br>
 <img width="1437" alt="api" src="https://github.com/Doris-Siu/UserManagement_Client/assets/107772913/76304360-8d31-409c-ae78-21fe4647dcdb">
 <br><br>
+PostgreSQL database serves as the persistent data store. Interacts with the database is facilitated through Entity Framework.
+
+<img width="1383" alt="Screenshot 2024-03-13 at 12 14 56 AM" src="https://github.com/Doris-Siu/UserManagement_Client/assets/107772913/be6b3004-f897-4f46-8efe-1a7648a63e46">
+<br><br>
+
 ## Technologies
 - BlazorWASM
 - C#
